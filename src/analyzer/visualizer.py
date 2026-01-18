@@ -9,114 +9,114 @@ import numpy as np
 from jinja2 import Template
 
 class Visualizer:
-    """Visualization Report Generator"""
+    """可视化报告生成器"""
     
     def __init__(self):
         self.output_dir = Path("reports")
         self.output_dir.mkdir(exist_ok=True)
         
-        # Set matplotlib style
+        # 设置matplotlib样式
         plt.style.use('seaborn-v0_8-darkgrid')
         sns.set_palette("husl")
     
     def plot_complexity_distribution(self, df: pd.DataFrame):
-        """Plot complexity distribution charts"""
+        """绘制复杂度分布图表"""
         fig, axes = plt.subplots(2, 2, figsize=(14, 10))
         
-        # 1. Cyclomatic complexity distribution
+        # 1. 圈复杂度分布
         ax = axes[0, 0]
         complexity_data = df['cyclomatic_complexity'].dropna()
         ax.hist(complexity_data, bins=30, edgecolor='black', alpha=0.7)
-        ax.set_xlabel('Cyclomatic Complexity')
-        ax.set_ylabel('Number of Files')
-        ax.set_title('Cyclomatic Complexity Distribution')
+        ax.set_xlabel('圈复杂度')
+        ax.set_ylabel('文件数量')
+        ax.set_title('圈复杂度分布')
         ax.axvline(complexity_data.mean(), color='red', linestyle='--', 
-                  label=f'Mean: {complexity_data.mean():.2f}')
+                  label=f'平均值: {complexity_data.mean():.2f}')
         ax.legend()
         
-        # 2. Maintainability index distribution
+        # 2. 可维护性指数分布
         ax = axes[0, 1]
         mi_data = df['maintainability_index'].dropna()
         ax.hist(mi_data, bins=30, edgecolor='black', alpha=0.7, color='green')
-        ax.set_xlabel('Maintainability Index')
-        ax.set_ylabel('Number of Files')
-        ax.set_title('Maintainability Index Distribution')
+        ax.set_xlabel('可维护性指数')
+        ax.set_ylabel('文件数量')
+        ax.set_title('可维护性指数分布')
         ax.axvline(mi_data.mean(), color='red', linestyle='--',
-                  label=f'Mean: {mi_data.mean():.2f}')
+                  label=f'平均值: {mi_data.mean():.2f}')
         ax.legend()
         
-        # 3. Function length distribution
+        # 3. 函数长度分布
         ax = axes[1, 0]
         func_lengths = df['avg_lines_per_function'].dropna()
         ax.hist(func_lengths[func_lengths < 100], bins=30, 
                 edgecolor='black', alpha=0.7, color='orange')
-        ax.set_xlabel('Average Function Length (Lines)')
-        ax.set_ylabel('Number of Files')
-        ax.set_title('Function Length Distribution (<100 lines)')
+        ax.set_xlabel('平均函数长度（行数）')
+        ax.set_ylabel('文件数量')
+        ax.set_title('函数长度分布（<100行）')
         
-        # 4. Style issues distribution
+        # 4. 代码风格问题分布
         ax = axes[1, 1]
         style_issues = df['style_issues'].dropna()
         ax.boxplot(style_issues)
-        ax.set_ylabel('Number of Style Issues')
-        ax.set_title('Code Style Issues Distribution')
+        ax.set_ylabel('代码风格问题数量')
+        ax.set_title('代码风格问题分布')
         
         plt.tight_layout()
         plt.savefig(self.output_dir / 'complexity_distribution.png', dpi=150)
         plt.close()
         
-        # Plotly interactive charts
+        # Plotly交互式图表
         fig = make_subplots(
             rows=2, cols=2,
-            subplot_titles=('Cyclomatic Complexity Distribution', 
-                           'Maintainability Index Distribution', 
-                           'Function Length Distribution', 
-                           'Style Issues Distribution')
+            subplot_titles=('圈复杂度分布', 
+                           '可维护性指数分布', 
+                           '函数长度分布', 
+                           '代码风格问题分布')
         )
         
-        fig.add_trace(go.Histogram(x=complexity_data, name='Cyclomatic Complexity'), row=1, col=1)
-        fig.add_trace(go.Histogram(x=mi_data, name='Maintainability Index'), row=1, col=2)
-        fig.add_trace(go.Histogram(x=func_lengths, name='Function Length'), row=2, col=1)
-        fig.add_trace(go.Box(y=style_issues, name='Style Issues'), row=2, col=2)
+        fig.add_trace(go.Histogram(x=complexity_data, name='圈复杂度'), row=1, col=1)
+        fig.add_trace(go.Histogram(x=mi_data, name='可维护性指数'), row=1, col=2)
+        fig.add_trace(go.Histogram(x=func_lengths, name='函数长度'), row=2, col=1)
+        fig.add_trace(go.Box(y=style_issues, name='代码风格问题'), row=2, col=2)
         
         fig.update_layout(height=800, showlegend=False)
         fig.write_html(self.output_dir / 'complexity_interactive.html')
     
     def plot_style_issues_by_module(self, df: pd.DataFrame):
-        """Analyze style issues by module"""
-        # Extract module name
+        """按模块分析代码风格问题"""
+        # 提取模块名称
         df['module'] = df['file_path'].apply(
             lambda x: '/'.join(Path(x).parts[:2]) if '/' in x else 'root'
         )
         
-        # Group by module
+        # 按模块分组
         module_stats = df.groupby('module').agg({
             'style_issues': 'sum',
             'file_path': 'count',
             'cyclomatic_complexity': 'mean'
         }).rename(columns={'file_path': 'file_count'})
         
-        # Top 15 modules with most issues
+        # 问题最多的15个模块
         top_modules = module_stats.nlargest(15, 'style_issues')
         
         fig, axes = plt.subplots(1, 2, figsize=(16, 6))
         
-        # Bar chart for issue counts
+        # 问题数量条形图
         ax = axes[0]
         bars = ax.barh(range(len(top_modules)), top_modules['style_issues'])
         ax.set_yticks(range(len(top_modules)))
         ax.set_yticklabels(top_modules.index)
-        ax.set_xlabel('Number of Style Issues')
-        ax.set_title('Style Issues by Module (Top 15)')
+        ax.set_xlabel('代码风格问题数量')
+        ax.set_title('按模块统计代码风格问题（Top 15）')
         ax.invert_yaxis()
         
-        # Add value labels
+        # 添加数值标签
         for i, bar in enumerate(bars):
             width = bar.get_width()
             ax.text(width + 3, bar.get_y() + bar.get_height()/2,
                    f'{int(width)}', ha='left', va='center')
         
-        # Scatter plot for issue density
+        # 问题密度散点图
         ax = axes[1]
         scatter = ax.scatter(
             module_stats['file_count'],
@@ -126,36 +126,36 @@ class Visualizer:
             alpha=0.6,
             cmap='viridis'
         )
-        ax.set_xlabel('Number of Files')
-        ax.set_ylabel('Average Issues per File')
-        ax.set_title('Issue Density vs File Count by Module')
+        ax.set_xlabel('文件数量')
+        ax.set_ylabel('平均每个文件问题数')
+        ax.set_title('模块问题密度 vs 文件数量')
         
-        plt.colorbar(scatter, ax=ax, label='Average Cyclomatic Complexity')
+        plt.colorbar(scatter, ax=ax, label='平均圈复杂度')
         plt.tight_layout()
         plt.savefig(self.output_dir / 'style_issues_by_module.png', dpi=150)
         plt.close()
     
     def plot_function_metrics(self, df: pd.DataFrame):
-        """Function-level metrics analysis"""
+        """函数级别指标分析"""
         fig = plt.figure(figsize=(14, 10))
         
-        # Correlation heatmap
+        # 相关性热力图
         numeric_cols = [
             'cyclomatic_complexity', 'maintainability_index',
             'avg_lines_per_function', 'avg_args_per_function',
             'style_issues', 'function_count'
         ]
         
-        # Filter existing columns
+        # 过滤存在的列
         existing_cols = [col for col in numeric_cols if col in df.columns]
         corr_matrix = df[existing_cols].corr()
         
         ax = fig.add_subplot(2, 2, 1)
         sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', 
                    center=0, ax=ax, square=True)
-        ax.set_title('Metrics Correlation Heatmap')
+        ax.set_title('指标相关性热力图')
         
-        # Complexity vs Maintainability
+        # 复杂度 vs 可维护性
         ax = fig.add_subplot(2, 2, 2)
         scatter = ax.scatter(
             df['cyclomatic_complexity'],
@@ -165,66 +165,66 @@ class Visualizer:
             alpha=0.6,
             cmap='RdYlBu_r'
         )
-        ax.set_xlabel('Cyclomatic Complexity')
-        ax.set_ylabel('Maintainability Index')
-        ax.set_title('Complexity vs Maintainability Index')
-        plt.colorbar(scatter, ax=ax, label='Number of Style Issues')
+        ax.set_xlabel('圈复杂度')
+        ax.set_ylabel('可维护性指数')
+        ax.set_title('复杂度 vs 可维护性指数')
+        plt.colorbar(scatter, ax=ax, label='代码风格问题数量')
         
-        # Function length distribution by file type
+        # 按文件类型分组函数长度分布
         ax = fig.add_subplot(2, 2, 3)
         
-        # Group by file type (example: based on path)
+        # 按文件类型分组（示例：基于路径）
         df['file_type'] = df['file_path'].apply(
-            lambda x: 'test' if 'test' in x.lower() else 
-                     'util' if 'util' in x.lower() else 'core'
+            lambda x: '测试文件' if 'test' in x.lower() else 
+                     '工具文件' if 'util' in x.lower() else '核心文件'
         )
         
         data_to_plot = []
         labels = []
-        for file_type in ['core', 'util', 'test']:
+        for file_type in ['核心文件', '工具文件', '测试文件']:
             if file_type in df['file_type'].values:
                 data = df[df['file_type'] == file_type]['avg_lines_per_function']
-                data_to_plot.append(data[data < 100].values)  # Remove outliers
+                data_to_plot.append(data[data < 100].values)  # 移除异常值
                 labels.append(file_type)
         
         ax.boxplot(data_to_plot, labels=labels)
-        ax.set_ylabel('Average Function Length (Lines)')
-        ax.set_title('Function Length Distribution by File Type')
+        ax.set_ylabel('平均函数长度（行数）')
+        ax.set_title('按文件类型分组函数长度分布')
         
-        # Style issue types distribution
+        # 代码风格问题类型分布
         ax = fig.add_subplot(2, 2, 4)
         
-        # Mock issue type distribution
+        # 模拟问题类型分布
         issue_types = {
-            'E2': 25,  # Whitespace related
-            'E3': 18,  # Indentation
-            'E5': 12,  # Line length
-            'W1': 8,   # Warnings
-            'C9': 15,  # Complexity
-            'Other': 22
+            'E2': 25,  # 空格相关问题
+            'E3': 18,  # 缩进问题
+            'E5': 12,  # 行长度问题
+            'W1': 8,   # 警告
+            'C9': 15,  # 复杂度问题
+            '其他': 22
         }
         
         ax.pie(issue_types.values(), labels=issue_types.keys(),
               autopct='%1.1f%%', startangle=90)
-        ax.set_title('Style Issue Type Distribution')
+        ax.set_title('代码风格问题类型分布')
         
         plt.tight_layout()
         plt.savefig(self.output_dir / 'function_metrics_analysis.png', dpi=150)
         plt.close()
     
     def generate_html_report(self, df: pd.DataFrame):
-        """Generate detailed HTML report"""
-        # Calculate overall statistics
+        """生成详细HTML报告"""
+        # 计算总体统计
         total_files = len(df)
         avg_complexity = df['cyclomatic_complexity'].mean()
         avg_maintainability = df['maintainability_index'].mean()
         total_style_issues = df['style_issues'].sum()
         
-        # Find most complex files
+        # 查找最复杂的文件
         most_complex = df.nlargest(5, 'cyclomatic_complexity')[['file_path', 'cyclomatic_complexity']]
         most_issues = df.nlargest(5, 'style_issues')[['file_path', 'style_issues']]
         
-        # Group by module
+        # 按模块分组
         df['module'] = df['file_path'].apply(
             lambda x: str(Path(x).parent)
         )
@@ -234,14 +234,15 @@ class Visualizer:
             'file_path': 'count'
         }).rename(columns={'file_path': 'file_count'})
         
-        # HTML template
+        # HTML模板（中文版）
         html_template = """
         <!DOCTYPE html>
         <html>
         <head>
-            <title>pandas Code Quality Analysis Report</title>
+            <title>pandas 代码质量分析报告</title>
+            <meta charset="UTF-8">
             <style>
-                body { font-family: Arial, sans-serif; margin: 40px; }
+                body { font-family: "Microsoft YaHei", Arial, sans-serif; margin: 40px; }
                 .container { max-width: 1200px; margin: 0 auto; }
                 .header { background: #2c3e50; color: white; padding: 20px; border-radius: 5px; }
                 .metric-card { background: #f8f9fa; padding: 20px; margin: 10px 0; border-radius: 5px; }
@@ -257,72 +258,79 @@ class Visualizer:
                 .critical { color: #e74c3c; font-weight: bold; }
                 .warning { color: #f39c12; }
                 .good { color: #27ae60; }
+                .metric-grid { display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap; }
+                .metric-item { flex: 1; min-width: 200px; margin: 10px; }
+                .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+                @media (max-width: 768px) {
+                    .chart-grid { grid-template-columns: 1fr; }
+                    .metric-grid { flex-direction: column; }
+                }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>📊 pandas Code Quality Analysis Report</h1>
-                    <p>Generated at: {{ timestamp }}</p>
+                    <h1>📊 pandas 代码质量分析报告</h1>
+                    <p>生成时间: {{ timestamp }}</p>
                 </div>
                 
                 <div class="metric-card">
-                    <h2>📈 Overall Statistics</h2>
-                    <div style="display: flex; justify-content: space-around; text-align: center;">
-                        <div>
+                    <h2>📈 总体统计</h2>
+                    <div class="metric-grid">
+                        <div class="metric-item">
                             <div class="metric-value">{{ total_files }}</div>
-                            <div>Files Analyzed</div>
+                            <div>分析文件总数</div>
                         </div>
-                        <div>
+                        <div class="metric-item">
                             <div class="metric-value {% if avg_complexity > 15 %}critical{% elif avg_complexity > 10 %}warning{% else %}good{% endif %}">
                                 {{ avg_complexity | round(2) }}
                             </div>
-                            <div>Avg Cyclomatic Complexity</div>
+                            <div>平均圈复杂度</div>
                         </div>
-                        <div>
+                        <div class="metric-item">
                             <div class="metric-value {% if avg_maintainability < 65 %}critical{% elif avg_maintainability < 85 %}warning{% else %}good{% endif %}">
                                 {{ avg_maintainability | round(2) }}
                             </div>
-                            <div>Avg Maintainability Index</div>
+                            <div>平均可维护性指数</div>
                         </div>
-                        <div>
+                        <div class="metric-item">
                             <div class="metric-value {% if total_style_issues > 100 %}critical{% elif total_style_issues > 50 %}warning{% else %}good{% endif %}">
                                 {{ total_style_issues }}
                             </div>
-                            <div>Total Style Issues</div>
+                            <div>代码风格问题总数</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h2>📊 Visualizations</h2>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <h2>📊 可视化图表</h2>
+                    <div class="chart-grid">
                         <div>
-                            <h3>Complexity Distribution</h3>
-                            <img src="complexity_distribution.png" alt="Complexity Distribution">
+                            <h3>复杂度分布</h3>
+                            <img src="complexity_distribution.png" alt="复杂度分布">
                         </div>
                         <div>
-                            <h3>Style Issues by Module</h3>
-                            <img src="style_issues_by_module.png" alt="Style Issues by Module">
+                            <h3>按模块统计代码风格问题</h3>
+                            <img src="style_issues_by_module.png" alt="按模块统计代码风格问题">
                         </div>
                         <div style="grid-column: span 2;">
-                            <h3>Function Metrics Analysis</h3>
-                            <img src="function_metrics_analysis.png" alt="Function Metrics Analysis">
+                            <h3>函数指标分析</h3>
+                            <img src="function_metrics_analysis.png" alt="函数指标分析">
                         </div>
                     </div>
                 </div>
                 
                 <div class="highlight">
-                    <h2>⚠️ Critical Areas Requiring Attention</h2>
-                    <p>The following files require special attention for code quality and complexity:</p>
+                    <h2>⚠️ 需要重点关注的关键区域</h2>
+                    <p>以下文件在代码质量和复杂度方面需要特别关注：</p>
                 </div>
                 
-                <h3>🔴 Most Complex Files (Top 5)</h3>
+                <h3>🔴 最复杂文件（Top 5）</h3>
                 <table class="table">
                     <tr>
-                        <th>File Path</th>
-                        <th>Cyclomatic Complexity</th>
-                        <th>Status</th>
+                        <th>文件路径</th>
+                        <th>圈复杂度</th>
+                        <th>状态</th>
                     </tr>
                     {% for row in most_complex %}
                     <tr>
@@ -330,23 +338,23 @@ class Visualizer:
                         <td>{{ row.cyclomatic_complexity | round(2) }}</td>
                         <td>
                             {% if row.cyclomatic_complexity > 20 %}
-                                <span class="critical">CRITICAL</span>
+                                <span class="critical">严重</span>
                             {% elif row.cyclomatic_complexity > 15 %}
-                                <span class="warning">WARNING</span>
+                                <span class="warning">警告</span>
                             {% else %}
-                                <span class="good">OK</span>
+                                <span class="good">良好</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                 </table>
                 
-                <h3>⚠️ Files with Most Style Issues (Top 5)</h3>
+                <h3>⚠️ 代码风格问题最多文件（Top 5）</h3>
                 <table class="table">
                     <tr>
-                        <th>File Path</th>
-                        <th>Style Issues Count</th>
-                        <th>Status</th>
+                        <th>文件路径</th>
+                        <th>代码风格问题数量</th>
+                        <th>状态</th>
                     </tr>
                     {% for row in most_issues %}
                     <tr>
@@ -354,25 +362,25 @@ class Visualizer:
                         <td>{{ row.style_issues }}</td>
                         <td>
                             {% if row.style_issues > 20 %}
-                                <span class="critical">CRITICAL</span>
+                                <span class="critical">严重</span>
                             {% elif row.style_issues > 10 %}
-                                <span class="warning">WARNING</span>
+                                <span class="warning">警告</span>
                             {% else %}
-                                <span class="good">OK</span>
+                                <span class="good">良好</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                 </table>
                 
-                <h3>📁 Module Statistics (Top 10)</h3>
+                <h3>📁 模块统计（Top 10）</h3>
                 <table class="table">
                     <tr>
-                        <th>Module</th>
-                        <th>File Count</th>
-                        <th>Avg Complexity</th>
-                        <th>Total Issues</th>
-                        <th>Issues per File</th>
+                        <th>模块</th>
+                        <th>文件数量</th>
+                        <th>平均复杂度</th>
+                        <th>问题总数</th>
+                        <th>平均每个文件问题数</th>
                     </tr>
                     {% for module, stats in module_stats.head(10).iterrows() %}
                     <tr>
@@ -388,50 +396,50 @@ class Visualizer:
                 </table>
                 
                 <div class="metric-card improvement-list">
-                    <h2>💡 Improvement Recommendations</h2>
+                    <h2>💡 改进建议</h2>
                     <ul>
-                        <li><strong>Refactor</strong> functions with cyclomatic complexity > 20</li>
-                        <li><strong>Add docstrings</strong> to functions missing documentation</li>
-                        <li><strong>Follow PEP 8</strong> guidelines and fix style violations</li>
-                        <li><strong>Split long functions</strong> into smaller, focused units</li>
-                        <li><strong>Increase test coverage</strong> for critical modules</li>
-                        <li><strong>Reduce function arguments</strong> to improve readability</li>
-                        <li><strong>Add type hints</strong> to improve code clarity</li>
-                        <li><strong>Review complex modules</strong> with high issue density</li>
+                        <li><strong>重构</strong> 圈复杂度大于20的函数</li>
+                        <li><strong>添加文档字符串</strong> 到缺少文档的函数</li>
+                        <li><strong>遵循PEP 8规范</strong> 并修复代码风格违规</li>
+                        <li><strong>拆分长函数</strong> 为更小、更专注的单元</li>
+                        <li><strong>提高测试覆盖率</strong> 针对关键模块</li>
+                        <li><strong>减少函数参数</strong> 以提高可读性</li>
+                        <li><strong>添加类型提示</strong> 以提高代码清晰度</li>
+                        <li><strong>审查复杂模块</strong> 针对高问题密度的模块</li>
                     </ul>
                     
-                    <h3>🏆 Quality Benchmarks</h3>
+                    <h3>🏆 质量评估标准</h3>
                     <table class="table">
                         <tr>
-                            <th>Metric</th>
-                            <th>Excellent</th>
-                            <th>Good</th>
-                            <th>Needs Improvement</th>
-                            <th>Critical</th>
+                            <th>指标</th>
+                            <th>优秀</th>
+                            <th>良好</th>
+                            <th>需要改进</th>
+                            <th>严重</th>
                         </tr>
                         <tr>
-                            <td>Cyclomatic Complexity</td>
+                            <td>圈复杂度</td>
                             <td class="good">&lt; 10</td>
                             <td class="good">10-15</td>
                             <td class="warning">15-20</td>
                             <td class="critical">&gt; 20</td>
                         </tr>
                         <tr>
-                            <td>Maintainability Index</td>
+                            <td>可维护性指数</td>
                             <td class="good">&gt; 85</td>
                             <td class="good">65-85</td>
                             <td class="warning">50-65</td>
                             <td class="critical">&lt; 50</td>
                         </tr>
                         <tr>
-                            <td>Style Issues per File</td>
+                            <td>每个文件代码风格问题数</td>
                             <td class="good">&lt; 5</td>
                             <td class="good">5-10</td>
                             <td class="warning">10-20</td>
                             <td class="critical">&gt; 20</td>
                         </tr>
                         <tr>
-                            <td>Function Length (Lines)</td>
+                            <td>函数长度（行数）</td>
                             <td class="good">&lt; 20</td>
                             <td class="good">20-50</td>
                             <td class="warning">50-100</td>
@@ -441,38 +449,38 @@ class Visualizer:
                 </div>
                 
                 <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                    <h3>📋 Analysis Summary</h3>
-                    <p><strong>Overall Quality Rating:</strong> 
+                    <h3>📋 分析总结</h3>
+                    <p><strong>总体质量评级：</strong> 
                         {% if avg_complexity < 10 and avg_maintainability > 85 and total_style_issues/total_files < 5 %}
-                        <span class="good">EXCELLENT</span> 🏆
+                        <span class="good">优秀</span> 🏆
                         {% elif avg_complexity < 15 and avg_maintainability > 65 and total_style_issues/total_files < 10 %}
-                        <span class="good">GOOD</span> 👍
+                        <span class="good">良好</span> 👍
                         {% elif avg_complexity < 20 and avg_maintainability > 50 %}
-                        <span class="warning">NEEDS IMPROVEMENT</span> ⚠️
+                        <span class="warning">需要改进</span> ⚠️
                         {% else %}
-                        <span class="critical">REQUIRES URGENT ATTENTION</span> 🚨
+                        <span class="critical">需要紧急处理</span> 🚨
                         {% endif %}
                     </p>
-                    <p><strong>Key Findings:</strong></p>
+                    <p><strong>关键发现：</strong></p>
                     <ul>
-                        <li>Total files analyzed: {{ total_files }}</li>
-                        <li>Average cyclomatic complexity: {{ avg_complexity | round(2) }}</li>
-                        <li>Average maintainability index: {{ avg_maintainability | round(2) }}</li>
-                        <li>Total style issues found: {{ total_style_issues }}</li>
-                        <li>Average issues per file: {{ (total_style_issues/total_files) | round(2) if total_files > 0 else 0 }}</li>
+                        <li>分析文件总数：{{ total_files }}</li>
+                        <li>平均圈复杂度：{{ avg_complexity | round(2) }}</li>
+                        <li>平均可维护性指数：{{ avg_maintainability | round(2) }}</li>
+                        <li>发现代码风格问题总数：{{ total_style_issues }}</li>
+                        <li>平均每个文件问题数：{{ (total_style_issues/total_files) | round(2) if total_files > 0 else 0 }}</li>
                     </ul>
                 </div>
                 
                 <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
-                    <p>Report generated by pandas Code Quality Analyzer</p>
-                    <p>Interactive charts available in: <code>reports/complexity_interactive.html</code></p>
+                    <p>报告由 pandas 代码质量分析器生成</p>
+                    <p>交互式图表请查看：<code>reports/complexity_interactive.html</code></p>
                 </footer>
             </div>
         </body>
         </html>
         """
         
-        # Render template
+        # 渲染模板
         from datetime import datetime
         template = Template(html_template)
         html_content = template.render(
@@ -486,10 +494,10 @@ class Visualizer:
             module_stats=module_stats
         )
         
-        # Save HTML file
+        # 保存HTML文件
         report_path = self.output_dir / 'analysis_report.html'
         with open(report_path, 'w', encoding='utf-8') as f:
             f.write(html_content)
         
-        print(f"HTML report generated: {report_path}")
-        print(f"Interactive charts: {self.output_dir}/complexity_interactive.html")
+        print(f"HTML报告已生成: {report_path}")
+        print(f"交互式图表: {self.output_dir}/complexity_interactive.html")

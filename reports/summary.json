@@ -1,7 +1,7 @@
 {
   "total_files": 49,
-  "avg_complexity": 164.40816326530611,
-  "avg_maintainability": 50.514309093540476,
-  "total_style_issues": 2046,
-  "avg_lines_per_function": 27.548176458730932
+  "avg_complexity": 164.3673469387755,
+  "avg_maintainability": 50.531924396177445,
+  "total_style_issues": 2043,
+  "avg_lines_per_function": 27.46654380566971
 }

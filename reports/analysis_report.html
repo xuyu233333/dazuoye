@@ -1,0 +1,370 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>pandas 代码质量分析报告</title>
+            <meta charset="UTF-8">
+            <style>
+                body { font-family: "Microsoft YaHei", Arial, sans-serif; margin: 40px; }
+                .container { max-width: 1200px; margin: 0 auto; }
+                .header { background: #2c3e50; color: white; padding: 20px; border-radius: 5px; }
+                .metric-card { background: #f8f9fa; padding: 20px; margin: 10px 0; border-radius: 5px; }
+                .metric-value { font-size: 2em; font-weight: bold; color: #3498db; }
+                .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                .table th { background-color: #4CAF50; color: white; }
+                .table tr:nth-child(even) { background-color: #f2f2f2; }
+                .highlight { background-color: #fff3cd; padding: 10px; border-radius: 5px; }
+                .chart-container { margin: 30px 0; }
+                img { max-width: 100%; height: auto; }
+                .improvement-list { background: #e7f3fe; padding: 15px; border-left: 4px solid #2196F3; }
+                .critical { color: #e74c3c; font-weight: bold; }
+                .warning { color: #f39c12; }
+                .good { color: #27ae60; }
+                .metric-grid { display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap; }
+                .metric-item { flex: 1; min-width: 200px; margin: 10px; }
+                .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+                @media (max-width: 768px) {
+                    .chart-grid { grid-template-columns: 1fr; }
+                    .metric-grid { flex-direction: column; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📊 pandas 代码质量分析报告</h1>
+                    <p>生成时间: 2026-01-18 16:33:17</p>
+                </div>
+                
+                <div class="metric-card">
+                    <h2>📈 总体统计</h2>
+                    <div class="metric-grid">
+                        <div class="metric-item">
+                            <div class="metric-value">49</div>
+                            <div>分析文件总数</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value critical">
+                                164.37
+                            </div>
+                            <div>平均圈复杂度</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value critical">
+                                50.53
+                            </div>
+                            <div>平均可维护性指数</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value critical">
+                                2043
+                            </div>
+                            <div>代码风格问题总数</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h2>📊 可视化图表</h2>
+                    <div class="chart-grid">
+                        <div>
+                            <h3>复杂度分布</h3>
+                            <img src="complexity_distribution.png" alt="复杂度分布">
+                        </div>
+                        <div>
+                            <h3>按模块统计代码风格问题</h3>
+                            <img src="style_issues_by_module.png" alt="按模块统计代码风格问题">
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <h3>函数指标分析</h3>
+                            <img src="function_metrics_analysis.png" alt="函数指标分析">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h2>⚠️ 需要重点关注的关键区域</h2>
+                    <p>以下文件在代码质量和复杂度方面需要特别关注：</p>
+                </div>
+                
+                <h3>🔴 最复杂文件（Top 5）</h3>
+                <table class="table">
+                    <tr>
+                        <th>文件路径</th>
+                        <th>圈复杂度</th>
+                        <th>状态</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\generic.py</td>
+                        <td>1115</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\pytables.py</td>
+                        <td>1066</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\frame.py</td>
+                        <td>1005</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\stata.py</td>
+                        <td>585</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\indexing.py</td>
+                        <td>562</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <h3>⚠️ 代码风格问题最多文件（Top 5）</h3>
+                <table class="table">
+                    <tr>
+                        <th>文件路径</th>
+                        <th>代码风格问题数量</th>
+                        <th>状态</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\frame.py</td>
+                        <td>390</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\generic.py</td>
+                        <td>381</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\series.py</td>
+                        <td>192</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\pytables.py</td>
+                        <td>150</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\resample.py</td>
+                        <td>95</td>
+                        <td>
+                            
+                                <span class="critical">严重</span>
+                            
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <h3>📁 模块统计（Top 10）</h3>
+                <table class="table">
+                    <tr>
+                        <th>模块</th>
+                        <th>文件数量</th>
+                        <th>平均复杂度</th>
+                        <th>问题总数</th>
+                        <th>平均每个文件问题数</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>.</td>
+                        <td>4.0</td>
+                        <td class="critical">
+                            43.0
+                        </td>
+                        <td>43.0</td>
+                        <td>10.75</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>api</td>
+                        <td>1.0</td>
+                        <td >
+                            0.0
+                        </td>
+                        <td>0.0</td>
+                        <td>0.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>arrays</td>
+                        <td>1.0</td>
+                        <td >
+                            2.0
+                        </td>
+                        <td>0.0</td>
+                        <td>0.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>compat</td>
+                        <td>6.0</td>
+                        <td class="warning">
+                            11.17
+                        </td>
+                        <td>12.0</td>
+                        <td>2.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core</td>
+                        <td>21.0</td>
+                        <td class="critical">
+                            238.43
+                        </td>
+                        <td>1473.0</td>
+                        <td>70.14</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>errors</td>
+                        <td>1.0</td>
+                        <td class="critical">
+                            54.0
+                        </td>
+                        <td>36.0</td>
+                        <td>36.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io</td>
+                        <td>15.0</td>
+                        <td class="critical">
+                            183.47
+                        </td>
+                        <td>479.0</td>
+                        <td>31.93</td>
+                    </tr>
+                    
+                </table>
+                
+                <div class="metric-card improvement-list">
+                    <h2>💡 改进建议</h2>
+                    <ul>
+                        <li><strong>重构</strong> 圈复杂度大于20的函数</li>
+                        <li><strong>添加文档字符串</strong> 到缺少文档的函数</li>
+                        <li><strong>遵循PEP 8规范</strong> 并修复代码风格违规</li>
+                        <li><strong>拆分长函数</strong> 为更小、更专注的单元</li>
+                        <li><strong>提高测试覆盖率</strong> 针对关键模块</li>
+                        <li><strong>减少函数参数</strong> 以提高可读性</li>
+                        <li><strong>添加类型提示</strong> 以提高代码清晰度</li>
+                        <li><strong>审查复杂模块</strong> 针对高问题密度的模块</li>
+                    </ul>
+                    
+                    <h3>🏆 质量评估标准</h3>
+                    <table class="table">
+                        <tr>
+                            <th>指标</th>
+                            <th>优秀</th>
+                            <th>良好</th>
+                            <th>需要改进</th>
+                            <th>严重</th>
+                        </tr>
+                        <tr>
+                            <td>圈复杂度</td>
+                            <td class="good">&lt; 10</td>
+                            <td class="good">10-15</td>
+                            <td class="warning">15-20</td>
+                            <td class="critical">&gt; 20</td>
+                        </tr>
+                        <tr>
+                            <td>可维护性指数</td>
+                            <td class="good">&gt; 85</td>
+                            <td class="good">65-85</td>
+                            <td class="warning">50-65</td>
+                            <td class="critical">&lt; 50</td>
+                        </tr>
+                        <tr>
+                            <td>每个文件代码风格问题数</td>
+                            <td class="good">&lt; 5</td>
+                            <td class="good">5-10</td>
+                            <td class="warning">10-20</td>
+                            <td class="critical">&gt; 20</td>
+                        </tr>
+                        <tr>
+                            <td>函数长度（行数）</td>
+                            <td class="good">&lt; 20</td>
+                            <td class="good">20-50</td>
+                            <td class="warning">50-100</td>
+                            <td class="critical">&gt; 100</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h3>📋 分析总结</h3>
+                    <p><strong>总体质量评级：</strong> 
+                        
+                        <span class="critical">需要紧急处理</span> 🚨
+                        
+                    </p>
+                    <p><strong>关键发现：</strong></p>
+                    <ul>
+                        <li>分析文件总数：49</li>
+                        <li>平均圈复杂度：164.37</li>
+                        <li>平均可维护性指数：50.53</li>
+                        <li>发现代码风格问题总数：2043</li>
+                        <li>平均每个文件问题数：41.69</li>
+                    </ul>
+                </div>
+                
+                <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
+                    <p>报告由 pandas 代码质量分析器生成</p>
+                    <p>交互式图表请查看：<code>reports/complexity_interactive.html</code></p>
+                </footer>
+            </div>
+        </body>
+        </html>
+        
