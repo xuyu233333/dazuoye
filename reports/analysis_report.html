@@ -1,0 +1,362 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>pandas Code Quality Analysis Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                .container { max-width: 1200px; margin: 0 auto; }
+                .header { background: #2c3e50; color: white; padding: 20px; border-radius: 5px; }
+                .metric-card { background: #f8f9fa; padding: 20px; margin: 10px 0; border-radius: 5px; }
+                .metric-value { font-size: 2em; font-weight: bold; color: #3498db; }
+                .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                .table th { background-color: #4CAF50; color: white; }
+                .table tr:nth-child(even) { background-color: #f2f2f2; }
+                .highlight { background-color: #fff3cd; padding: 10px; border-radius: 5px; }
+                .chart-container { margin: 30px 0; }
+                img { max-width: 100%; height: auto; }
+                .improvement-list { background: #e7f3fe; padding: 15px; border-left: 4px solid #2196F3; }
+                .critical { color: #e74c3c; font-weight: bold; }
+                .warning { color: #f39c12; }
+                .good { color: #27ae60; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📊 pandas Code Quality Analysis Report</h1>
+                    <p>Generated at: 2026-01-18 12:59:22</p>
+                </div>
+                
+                <div class="metric-card">
+                    <h2>📈 Overall Statistics</h2>
+                    <div style="display: flex; justify-content: space-around; text-align: center;">
+                        <div>
+                            <div class="metric-value">49</div>
+                            <div>Files Analyzed</div>
+                        </div>
+                        <div>
+                            <div class="metric-value critical">
+                                164.41
+                            </div>
+                            <div>Avg Cyclomatic Complexity</div>
+                        </div>
+                        <div>
+                            <div class="metric-value critical">
+                                50.51
+                            </div>
+                            <div>Avg Maintainability Index</div>
+                        </div>
+                        <div>
+                            <div class="metric-value critical">
+                                2046
+                            </div>
+                            <div>Total Style Issues</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h2>📊 Visualizations</h2>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div>
+                            <h3>Complexity Distribution</h3>
+                            <img src="complexity_distribution.png" alt="Complexity Distribution">
+                        </div>
+                        <div>
+                            <h3>Style Issues by Module</h3>
+                            <img src="style_issues_by_module.png" alt="Style Issues by Module">
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <h3>Function Metrics Analysis</h3>
+                            <img src="function_metrics_analysis.png" alt="Function Metrics Analysis">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h2>⚠️ Critical Areas Requiring Attention</h2>
+                    <p>The following files require special attention for code quality and complexity:</p>
+                </div>
+                
+                <h3>🔴 Most Complex Files (Top 5)</h3>
+                <table class="table">
+                    <tr>
+                        <th>File Path</th>
+                        <th>Cyclomatic Complexity</th>
+                        <th>Status</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\generic.py</td>
+                        <td>1115</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\pytables.py</td>
+                        <td>1066</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\frame.py</td>
+                        <td>1005</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\stata.py</td>
+                        <td>585</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\indexing.py</td>
+                        <td>562</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <h3>⚠️ Files with Most Style Issues (Top 5)</h3>
+                <table class="table">
+                    <tr>
+                        <th>File Path</th>
+                        <th>Style Issues Count</th>
+                        <th>Status</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\frame.py</td>
+                        <td>390</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\generic.py</td>
+                        <td>381</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\series.py</td>
+                        <td>192</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io\pytables.py</td>
+                        <td>150</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core\resample.py</td>
+                        <td>95</td>
+                        <td>
+                            
+                                <span class="critical">CRITICAL</span>
+                            
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <h3>📁 Module Statistics (Top 10)</h3>
+                <table class="table">
+                    <tr>
+                        <th>Module</th>
+                        <th>File Count</th>
+                        <th>Avg Complexity</th>
+                        <th>Total Issues</th>
+                        <th>Issues per File</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>.</td>
+                        <td>4.0</td>
+                        <td class="critical">
+                            43.5
+                        </td>
+                        <td>46.0</td>
+                        <td>11.5</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>api</td>
+                        <td>1.0</td>
+                        <td >
+                            0.0
+                        </td>
+                        <td>0.0</td>
+                        <td>0.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>arrays</td>
+                        <td>1.0</td>
+                        <td >
+                            2.0
+                        </td>
+                        <td>0.0</td>
+                        <td>0.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>compat</td>
+                        <td>6.0</td>
+                        <td class="warning">
+                            11.17
+                        </td>
+                        <td>12.0</td>
+                        <td>2.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>core</td>
+                        <td>21.0</td>
+                        <td class="critical">
+                            238.43
+                        </td>
+                        <td>1473.0</td>
+                        <td>70.14</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>errors</td>
+                        <td>1.0</td>
+                        <td class="critical">
+                            54.0
+                        </td>
+                        <td>36.0</td>
+                        <td>36.0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>io</td>
+                        <td>15.0</td>
+                        <td class="critical">
+                            183.47
+                        </td>
+                        <td>479.0</td>
+                        <td>31.93</td>
+                    </tr>
+                    
+                </table>
+                
+                <div class="metric-card improvement-list">
+                    <h2>💡 Improvement Recommendations</h2>
+                    <ul>
+                        <li><strong>Refactor</strong> functions with cyclomatic complexity > 20</li>
+                        <li><strong>Add docstrings</strong> to functions missing documentation</li>
+                        <li><strong>Follow PEP 8</strong> guidelines and fix style violations</li>
+                        <li><strong>Split long functions</strong> into smaller, focused units</li>
+                        <li><strong>Increase test coverage</strong> for critical modules</li>
+                        <li><strong>Reduce function arguments</strong> to improve readability</li>
+                        <li><strong>Add type hints</strong> to improve code clarity</li>
+                        <li><strong>Review complex modules</strong> with high issue density</li>
+                    </ul>
+                    
+                    <h3>🏆 Quality Benchmarks</h3>
+                    <table class="table">
+                        <tr>
+                            <th>Metric</th>
+                            <th>Excellent</th>
+                            <th>Good</th>
+                            <th>Needs Improvement</th>
+                            <th>Critical</th>
+                        </tr>
+                        <tr>
+                            <td>Cyclomatic Complexity</td>
+                            <td class="good">&lt; 10</td>
+                            <td class="good">10-15</td>
+                            <td class="warning">15-20</td>
+                            <td class="critical">&gt; 20</td>
+                        </tr>
+                        <tr>
+                            <td>Maintainability Index</td>
+                            <td class="good">&gt; 85</td>
+                            <td class="good">65-85</td>
+                            <td class="warning">50-65</td>
+                            <td class="critical">&lt; 50</td>
+                        </tr>
+                        <tr>
+                            <td>Style Issues per File</td>
+                            <td class="good">&lt; 5</td>
+                            <td class="good">5-10</td>
+                            <td class="warning">10-20</td>
+                            <td class="critical">&gt; 20</td>
+                        </tr>
+                        <tr>
+                            <td>Function Length (Lines)</td>
+                            <td class="good">&lt; 20</td>
+                            <td class="good">20-50</td>
+                            <td class="warning">50-100</td>
+                            <td class="critical">&gt; 100</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h3>📋 Analysis Summary</h3>
+                    <p><strong>Overall Quality Rating:</strong> 
+                        
+                        <span class="critical">REQUIRES URGENT ATTENTION</span> 🚨
+                        
+                    </p>
+                    <p><strong>Key Findings:</strong></p>
+                    <ul>
+                        <li>Total files analyzed: 49</li>
+                        <li>Average cyclomatic complexity: 164.41</li>
+                        <li>Average maintainability index: 50.51</li>
+                        <li>Total style issues found: 2046</li>
+                        <li>Average issues per file: 41.76</li>
+                    </ul>
+                </div>
+                
+                <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
+                    <p>Report generated by pandas Code Quality Analyzer</p>
+                    <p>Interactive charts available in: <code>reports/complexity_interactive.html</code></p>
+                </footer>
+            </div>
+        </body>
+        </html>
+        
